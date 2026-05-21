@@ -5,8 +5,8 @@
 <p align="center">
   <h1 align="center">Go Paginate — The Ultimate Go Pagination Library</h1>
   <p align="center">
-    <a href="https://pkg.go.dev/github.com/booscaaa/go-paginate/v4"><img alt="Reference" src="https://img.shields.io/badge/go-reference-purple?style=for-the-badge"></a>
-    <a href="https://github.com/booscaaa/go-paginate/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/booscaaa/go-paginate.svg?style=for-the-badge"></a>
+    <a href="https://pkg.go.dev/github.com/emberot/go-paginate/v4"><img alt="Reference" src="https://img.shields.io/badge/go-reference-purple?style=for-the-badge"></a>
+    <a href="https://github.com/emberot/go-paginate/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/booscaaa/go-paginate.svg?style=for-the-badge"></a>
     <a href="/LICENSE"><img alt="Software License" src="https://img.shields.io/badge/license-MIT-red.svg?style=for-the-badge"></a>
     <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/booscaaa/go-paginate/test.yaml?style=for-the-badge">
     <a href="https://codecov.io/gh/booscaaa/go-paginate"><img alt="Coverage" src="https://img.shields.io/codecov/c/github/booscaaa/go-paginate/master.svg?style=for-the-badge"></a>
@@ -18,11 +18,11 @@
 
 ## Versions
 
-| Version | Status | Documentation | Install |
-|---|---|---|---|
-| **v4** ✨ | **Latest — recommended** | [v4/README.md](v4/README.md) | `go get github.com/booscaaa/go-paginate/v4` |
-| v3 | Stable | [v3/README.md](v3/README.md) | `go get github.com/booscaaa/go-paginate/v3` |
-| v2 | Legacy | — | `go get github.com/booscaaa/go-paginate/v2` |
+| Version   | Status                   | Documentation                | Install                                    |
+| --------- | ------------------------ | ---------------------------- | ------------------------------------------ |
+| **v4** ✨ | **Latest — recommended** | [v4/README.md](v4/README.md) | `go get github.com/emberot/go-paginate/v4` |
+| v3        | Stable                   | [v3/README.md](v3/README.md) | `go get github.com/emberot/go-paginate/v3` |
+| v2        | Legacy                   | —                            | `go get github.com/emberot/go-paginate/v2` |
 
 ---
 
@@ -111,26 +111,47 @@ WHERE (users.role = $1 OR users.role = $2)
 ```json
 {
   "data": [
-    { "id": 7,  "name": "John Smith",  "email": "john.smith@example.com",  "role": "admin",  "active": true, "created_at": "2024-03-10T09:00:00Z" },
-    { "id": 4,  "name": "Johnny Cash", "email": "johnny.cash@example.com", "role": "editor", "active": true, "created_at": "2024-02-28T14:30:00Z" },
-    { "id": 2,  "name": "John Doe",    "email": "john.doe@example.com",    "role": "admin",  "active": true, "created_at": "2024-01-15T11:00:00Z" }
+    {
+      "id": 7,
+      "name": "John Smith",
+      "email": "john.smith@example.com",
+      "role": "admin",
+      "active": true,
+      "created_at": "2024-03-10T09:00:00Z"
+    },
+    {
+      "id": 4,
+      "name": "Johnny Cash",
+      "email": "johnny.cash@example.com",
+      "role": "editor",
+      "active": true,
+      "created_at": "2024-02-28T14:30:00Z"
+    },
+    {
+      "id": 2,
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "role": "admin",
+      "active": true,
+      "created_at": "2024-01-15T11:00:00Z"
+    }
   ],
   "meta": {
     "current_page": 2,
-    "per_page":     3,
-    "total_items":  14,
-    "total_pages":  5,
-    "from":         4,
-    "to":           6,
-    "has_prev":     true,
-    "has_next":     true
+    "per_page": 3,
+    "total_items": 14,
+    "total_pages": 5,
+    "from": 4,
+    "to": 6,
+    "has_prev": true,
+    "has_next": true
   },
   "links": {
-    "self":  "/users?eq%5Brole%5D=admin&eq%5Brole%5D=editor&like%5Bname%5D=john&limit=3&page=2&sort=-created_at",
+    "self": "/users?eq%5Brole%5D=admin&eq%5Brole%5D=editor&like%5Bname%5D=john&limit=3&page=2&sort=-created_at",
     "first": "/users?eq%5Brole%5D=admin&eq%5Brole%5D=editor&like%5Bname%5D=john&limit=3&page=1&sort=-created_at",
-    "last":  "/users?eq%5Brole%5D=admin&eq%5Brole%5D=editor&like%5Bname%5D=john&limit=3&page=5&sort=-created_at",
-    "prev":  "/users?eq%5Brole%5D=admin&eq%5Brole%5D=editor&like%5Bname%5D=john&limit=3&page=1&sort=-created_at",
-    "next":  "/users?eq%5Brole%5D=admin&eq%5Brole%5D=editor&like%5Bname%5D=john&limit=3&page=3&sort=-created_at"
+    "last": "/users?eq%5Brole%5D=admin&eq%5Brole%5D=editor&like%5Bname%5D=john&limit=3&page=5&sort=-created_at",
+    "prev": "/users?eq%5Brole%5D=admin&eq%5Brole%5D=editor&like%5Bname%5D=john&limit=3&page=1&sort=-created_at",
+    "next": "/users?eq%5Brole%5D=admin&eq%5Brole%5D=editor&like%5Bname%5D=john&limit=3&page=3&sort=-created_at"
   }
 }
 ```
@@ -197,9 +218,30 @@ LIMIT $2
 ```json
 {
   "data": [
-    { "id": 9, "name": "Alice",   "email": "alice@example.com",   "role": "user", "active": true, "created_at": "2024-04-01T10:00:00Z" },
-    { "id": 7, "name": "Bob",     "email": "bob@example.com",     "role": "user", "active": true, "created_at": "2024-03-20T08:00:00Z" },
-    { "id": 4, "name": "Charlie", "email": "charlie@example.com", "role": "user", "active": true, "created_at": "2024-02-15T16:00:00Z" }
+    {
+      "id": 9,
+      "name": "Alice",
+      "email": "alice@example.com",
+      "role": "user",
+      "active": true,
+      "created_at": "2024-04-01T10:00:00Z"
+    },
+    {
+      "id": 7,
+      "name": "Bob",
+      "email": "bob@example.com",
+      "role": "user",
+      "active": true,
+      "created_at": "2024-03-20T08:00:00Z"
+    },
+    {
+      "id": 4,
+      "name": "Charlie",
+      "email": "charlie@example.com",
+      "role": "user",
+      "active": true,
+      "created_at": "2024-02-15T16:00:00Z"
+    }
   ],
   "meta": {
     "per_page": 3,
@@ -241,8 +283,22 @@ LIMIT $5
 ```json
 {
   "data": [
-    { "id": 3, "name": "Diana", "email": "diana@example.com", "role": "user", "active": true, "created_at": "2024-01-30T12:00:00Z" },
-    { "id": 1, "name": "Eve",   "email": "eve@example.com",   "role": "user", "active": true, "created_at": "2024-01-10T09:00:00Z" }
+    {
+      "id": 3,
+      "name": "Diana",
+      "email": "diana@example.com",
+      "role": "user",
+      "active": true,
+      "created_at": "2024-01-30T12:00:00Z"
+    },
+    {
+      "id": 1,
+      "name": "Eve",
+      "email": "eve@example.com",
+      "role": "user",
+      "active": true,
+      "created_at": "2024-01-10T09:00:00Z"
+    }
   ],
   "meta": {
     "per_page": 3,
@@ -276,7 +332,7 @@ v4 is a complete rewrite with first-class **cursor pagination**, **generic respo
 ## Installation
 
 ```bash
-go get github.com/booscaaa/go-paginate/v4
+go get github.com/emberot/go-paginate/v4
 ```
 
 📖 **[Full v4 Documentation](v4/README.md)**

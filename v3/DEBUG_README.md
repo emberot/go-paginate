@@ -22,7 +22,7 @@ export GO_PAGINATE_MAX_LIMIT=1000
 ```go
 package main
 
-import "github.com/booscaaa/go-paginate/v3/paginate"
+import "github.com/emberot/go-paginate/v3/paginate"
 
 func init() {
     // Set global configurations
@@ -75,7 +75,7 @@ package main
 import (
     "log/slog"
     "os"
-    "github.com/booscaaa/go-paginate/v3/paginate"
+    "github.com/emberot/go-paginate/v3/paginate"
 )
 
 type User struct {
@@ -90,10 +90,10 @@ func main() {
         Level: slog.LevelDebug,
     }))
     slog.SetDefault(logger)
-    
+
     // Enable debug mode
     paginate.SetDebugMode(true)
-    
+
     // Build query
     sql, args, err := paginate.NewBuilder().
         Table("users").
@@ -103,11 +103,11 @@ func main() {
         Search("john", "name", "email").
         OrderBy("name", "ASC").
         BuildSQL()
-    
+
     if err != nil {
         panic(err)
     }
-    
+
     // Logs will be automatically printed in JSON format
     // The query and arguments are also available for use
     println("SQL:", sql)
@@ -118,7 +118,9 @@ func main() {
 ## 🔍 Operations that Generate Logs
 
 ### 1. BuildSQL()
+
 Generates logs for the main pagination query:
+
 ```json
 {
   "operation": "BuildSQL",
@@ -128,7 +130,9 @@ Generates logs for the main pagination query:
 ```
 
 ### 2. BuildCountSQL()
+
 Generates logs for the count query:
+
 ```json
 {
   "operation": "BuildCountSQL",
@@ -138,7 +142,9 @@ Generates logs for the count query:
 ```
 
 ### 3. GenerateSQL() (interno)
+
 Called internally by BuildSQL():
+
 ```json
 {
   "operation": "GenerateSQL",
@@ -148,7 +154,9 @@ Called internally by BuildSQL():
 ```
 
 ### 4. GenerateCountQuery() (interno)
+
 Called internally by BuildCountSQL():
+
 ```json
 {
   "operation": "GenerateCountQuery",
@@ -158,7 +166,9 @@ Called internally by BuildCountSQL():
 ```
 
 ### 5. Vacuum Mode
+
 When vacuum mode is enabled:
+
 ```json
 {
   "operation": "GenerateCountQuery (Vacuum)",

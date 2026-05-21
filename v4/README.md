@@ -5,8 +5,8 @@
 <p align="center">
   <h1 align="center">Go Paginate v4 — The Ultimate Go Pagination Library</h1>
   <p align="center">
-    <a href="https://pkg.go.dev/github.com/booscaaa/go-paginate/v4"><img alt="Reference" src="https://img.shields.io/badge/go-reference-purple?style=for-the-badge"></a>
-    <a href="https://github.com/booscaaa/go-paginate/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/booscaaa/go-paginate.svg?style=for-the-badge"></a>
+    <a href="https://pkg.go.dev/github.com/emberot/go-paginate/v4"><img alt="Reference" src="https://img.shields.io/badge/go-reference-purple?style=for-the-badge"></a>
+    <a href="https://github.com/emberot/go-paginate/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/booscaaa/go-paginate.svg?style=for-the-badge"></a>
     <a href="/LICENSE"><img alt="Software License" src="https://img.shields.io/badge/license-MIT-red.svg?style=for-the-badge"></a>
     <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/booscaaa/go-paginate/test.yaml?style=for-the-badge">
     <img alt="Go Version" src="https://img.shields.io/badge/go-1.21+-blue?style=for-the-badge">
@@ -54,24 +54,24 @@
 
 v4 is a **complete rewrite** focused on developer experience, generics, and production-grade cursor pagination.
 
-| Feature | v3 | v4 |
-|---|---|---|
-| Generic response types | ✗ | ✅ `Page[T]`, `CursorPage[T]` |
-| Cursor pagination | ✗ | ✅ single & multi-column keyset |
-| Keyset seek method | ✗ | ✅ 100% stable with any sort |
-| HATEOAS links | ✗ | ✅ built-in |
-| Zero-boilerplate cursor | ✗ | ✅ one line in handler |
-| HTTP query binding | ✅ | ✅ improved |
-| 30+ filter types | ✅ | ✅ identical |
-| OR grouping | ✅ | ✅ identical |
-| Global config + env vars | ✅ | ✅ improved |
+| Feature                  | v3  | v4                              |
+| ------------------------ | --- | ------------------------------- |
+| Generic response types   | ✗   | ✅ `Page[T]`, `CursorPage[T]`   |
+| Cursor pagination        | ✗   | ✅ single & multi-column keyset |
+| Keyset seek method       | ✗   | ✅ 100% stable with any sort    |
+| HATEOAS links            | ✗   | ✅ built-in                     |
+| Zero-boilerplate cursor  | ✗   | ✅ one line in handler          |
+| HTTP query binding       | ✅  | ✅ improved                     |
+| 30+ filter types         | ✅  | ✅ identical                    |
+| OR grouping              | ✅  | ✅ identical                    |
+| Global config + env vars | ✅  | ✅ improved                     |
 
 ---
 
 ## Installation
 
 ```bash
-go get github.com/booscaaa/go-paginate/v4
+go get github.com/emberot/go-paginate/v4
 ```
 
 **Requirements**: Go 1.21+
@@ -86,7 +86,7 @@ package main
 import (
     "net/http"
     "encoding/json"
-    "github.com/booscaaa/go-paginate/v4/paginate"
+    "github.com/emberot/go-paginate/v4/paginate"
 )
 
 type User struct {
@@ -198,12 +198,12 @@ paginate.SetLogger(slog.New(slog.NewJSONHandler(os.Stdout, nil)))
 
 **Environment variables** (loaded automatically at startup):
 
-| Variable | Default | Description |
-| -------- | ------- | ----------- |
-|`GO_PAGINATE_LOG_LEVEL`|`INFO`| Logging level |
-| `GO_PAGINATE_DEFAULT_LIMIT`|`10`| Default items per page |
-|`GO_PAGINATE_MAX_LIMIT`|`100`| Maximum allowed limit |
-|`GO_PAGINATE_DEBUG`|`false` | Enable SQL debug logging |
+| Variable                    | Default | Description              |
+| --------------------------- | ------- | ------------------------ |
+| `GO_PAGINATE_LOG_LEVEL`     | `INFO`  | Logging level            |
+| `GO_PAGINATE_DEFAULT_LIMIT` | `10`    | Default items per page   |
+| `GO_PAGINATE_MAX_LIMIT`     | `100`   | Maximum allowed limit    |
+| `GO_PAGINATE_DEBUG`         | `false` | Enable SQL debug logging |
 
 ```bash
 GO_PAGINATE_DEFAULT_LIMIT=25 GO_PAGINATE_MAX_LIMIT=500 ./myapp
@@ -234,6 +234,7 @@ query, args, err := paginate.NewBuilder().
 ```
 
 Generated SQL:
+
 ```sql
 SELECT id, name, price
 FROM store.products
@@ -334,6 +335,7 @@ page := paginate.NewPage(users, totalCount, params, r.URL)
 ```
 
 **JSON output:**
+
 ```json
 {
   "data": [...],
@@ -398,11 +400,13 @@ func UsersHandler(w http.ResponseWriter, r *http.Request) {
 ```
 
 **First request** (`GET /users?limit=10&sort=id`):
+
 ```sql
 SELECT * FROM users ORDER BY users.id ASC LIMIT 11
 ```
 
 **Second request** (`GET /users?limit=10&sort=id&cursor=<token>`):
+
 ```sql
 SELECT * FROM users WHERE (users.id > $1) ORDER BY users.id ASC LIMIT 11
 ```
@@ -425,6 +429,7 @@ page := paginate.NewCursorPage(rawItems, params, r.URL)
 ```
 
 **Generated SQL for `?sort=-created_at,id&cursor=<token>`:**
+
 ```sql
 SELECT * FROM users
 WHERE (
@@ -438,11 +443,11 @@ LIMIT $4
 #### Operator matrix
 
 | Pagination direction | Column sort | SQL operator |
-|---|---|---|
-| `after` (next page) | `ASC` | `>` |
-| `after` (next page) | `DESC` | `<` |
-| `before` (prev page) | `ASC` | `<` |
-| `before` (prev page) | `DESC` | `>` |
+| -------------------- | ----------- | ------------ |
+| `after` (next page)  | `ASC`       | `>`          |
+| `after` (next page)  | `DESC`      | `<`          |
+| `before` (prev page) | `ASC`       | `<`          |
+| `before` (prev page) | `DESC`      | `>`          |
 
 #### Three sort columns example
 
@@ -457,6 +462,7 @@ paginate.NewBuilder().
 ```
 
 Generated keyset WHERE for `after`:
+
 ```sql
 WHERE (
     (events.year < $1)
@@ -504,6 +510,7 @@ page := paginate.NewCursorPage(rawItems, params, r.URL)
 ```
 
 **JSON output:**
+
 ```json
 {
   "data": [...],
@@ -526,32 +533,35 @@ The cursor token is **opaque** — the frontend treats it as a black box string 
 
 ```js
 async function fetchPage(cursor = null) {
-  const params = new URLSearchParams(window.location.search)
+  const params = new URLSearchParams(window.location.search);
   if (cursor) {
-    params.set('cursor', cursor)
+    params.set("cursor", cursor);
   } else {
-    params.delete('cursor')
+    params.delete("cursor");
   }
 
-  const res = await fetch(`/users?${params}`)
-  const page = await res.json()
+  const res = await fetch(`/users?${params}`);
+  const page = await res.json();
 
-  renderTable(page.data)
-  updateButtons(page.meta, page.links)
+  renderTable(page.data);
+  updateButtons(page.meta, page.links);
 }
 
 function updateButtons(meta, links) {
-  const getCursor = (url) => url ? new URL(url).searchParams.get('cursor') : null
+  const getCursor = (url) =>
+    url ? new URL(url).searchParams.get("cursor") : null;
 
-  document.getElementById('btn-prev').disabled = !meta.has_prev
-  document.getElementById('btn-next').disabled = !meta.has_next
+  document.getElementById("btn-prev").disabled = !meta.has_prev;
+  document.getElementById("btn-next").disabled = !meta.has_next;
 
-  document.getElementById('btn-prev').onclick = () => fetchPage(getCursor(links.prev))
-  document.getElementById('btn-next').onclick = () => fetchPage(getCursor(links.next))
+  document.getElementById("btn-prev").onclick = () =>
+    fetchPage(getCursor(links.prev));
+  document.getElementById("btn-next").onclick = () =>
+    fetchPage(getCursor(links.next));
 }
 
 // load first page
-fetchPage()
+fetchPage();
 ```
 
 ### Manual Cursor Encoding
@@ -695,18 +705,18 @@ WHERE (users.active = $1)
 
 #### Complete OR group reference
 
-| Method | Query string key | SQL |
-|---|---|---|
-| `LikeOr(field, values...)` | `likeor[field]=val` | `field ILIKE '%val%'` |
-| `EqOr(field, values...)` | `eqor[field]=val` | `field = val` |
-| `GteOr(field, value)` | `gteor[field]=val` | `field >= val` |
-| `GtOr(field, value)` | `gtor[field]=val` | `field > val` |
-| `LteOr(field, value)` | `lteor[field]=val` | `field <= val` |
-| `LtOr(field, value)` | `ltor[field]=val` | `field < val` |
-| `InOr(field, values...)` | `inor[field]=val` | `field IN (...)` |
-| `NotInOr(field, values...)` | `notinor[field]=val` | `field NOT IN (...)` |
-| `WhereIsNullOr(field)` | `isnullor=field` | `field IS NULL` |
-| `WhereIsNotNullOr(field)` | `isnotnullor=field` | `field IS NOT NULL` |
+| Method                      | Query string key     | SQL                   |
+| --------------------------- | -------------------- | --------------------- |
+| `LikeOr(field, values...)`  | `likeor[field]=val`  | `field ILIKE '%val%'` |
+| `EqOr(field, values...)`    | `eqor[field]=val`    | `field = val`         |
+| `GteOr(field, value)`       | `gteor[field]=val`   | `field >= val`        |
+| `GtOr(field, value)`        | `gtor[field]=val`    | `field > val`         |
+| `LteOr(field, value)`       | `lteor[field]=val`   | `field <= val`        |
+| `LtOr(field, value)`        | `ltor[field]=val`    | `field < val`         |
+| `InOr(field, values...)`    | `inor[field]=val`    | `field IN (...)`      |
+| `NotInOr(field, values...)` | `notinor[field]=val` | `field NOT IN (...)`  |
+| `WhereIsNullOr(field)`      | `isnullor=field`     | `field IS NULL`       |
+| `WhereIsNotNullOr(field)`   | `isnotnullor=field`  | `field IS NOT NULL`   |
 
 ### Full-Text Search
 
@@ -725,6 +735,7 @@ WHERE (
 ```
 
 Query string:
+
 ```
 ?search=john+doe&search_fields=name,email,bio
 ```
@@ -813,6 +824,7 @@ paginate.NewBuilder().
 ```
 
 Query string:
+
 ```
 ?columns=id,name,email
 ```
@@ -879,7 +891,7 @@ b := paginate.NewBuilder().
     FromStruct(params)
 ```
 
-All three methods support the complete filter/sort/cursor surface. Fields set on the builder *before* `FromStruct` can be overridden by params, and fields set *after* always take precedence.
+All three methods support the complete filter/sort/cursor surface. Fields set on the builder _before_ `FromStruct` can be overridden by params, and fields set _after_ always take precedence.
 
 ---
 
@@ -889,43 +901,43 @@ All three methods support the complete filter/sort/cursor surface. Fields set on
 
 ### Complete Query String Reference
 
-| Parameter | Example | Description |
-|---|---|---|
-| `page` | `?page=2` | Page number (offset pagination) |
-| `limit` | `?limit=25` | Items per page |
-| `items_per_page` | `?items_per_page=25` | Alias for limit |
-| `sort` | `?sort=-created_at,id` | Sort columns (`-` prefix = DESC) |
-| `sort_columns` | `?sort_columns=name,age` | Legacy sort columns |
-| `sort_directions` | `?sort_directions=ASC,DESC` | Legacy sort directions |
-| `columns` | `?columns=id,name` | SELECT specific columns |
-| `search` | `?search=john` | Full-text search term |
-| `search_fields` | `?search_fields=name,email` | Fields to search in |
-| `vacuum` | `?vacuum=true` | Use count_estimate |
-| `no_offset` | `?no_offset=true` | Skip OFFSET clause |
-| `cursor` | `?cursor=<token>` | Cursor pagination token |
-| `eq[field]` | `?eq[status]=active` | Equality (OR within field) |
-| `eqand[field]` | `?eqand[role]=admin` | Equality AND |
-| `eqor[field]` | `?eqor[status]=vip` | Equality in OR group |
-| `like[field]` | `?like[name]=john` | ILIKE match |
-| `likeand[field]` | `?likeand[name]=john` | ILIKE AND |
-| `likeor[field]` | `?likeor[name]=john` | ILIKE in OR group |
-| `gte[field]` | `?gte[age]=18` | >= |
-| `gt[field]` | `?gt[price]=0` | > |
-| `lte[field]` | `?lte[price]=999` | <= |
-| `lt[field]` | `?lt[stock]=5` | < |
-| `in[field]` | `?in[id]=1&in[id]=2` | IN |
-| `notin[field]` | `?notin[status]=deleted` | NOT IN |
-| `between[field]` | `?between[price]=10&between[price]=500` | BETWEEN |
-| `isnull` | `?isnull=deleted_at` | IS NULL |
-| `isnotnull` | `?isnotnull=verified_at` | IS NOT NULL |
-| `gteor[field]` | `?gteor[age]=21` | >= in OR group |
-| `gtor[field]` | `?gtor[score]=100` | > in OR group |
-| `lteor[field]` | `?lteor[price]=50` | <= in OR group |
-| `ltor[field]` | `?ltor[qty]=10` | < in OR group |
-| `inor[field]` | `?inor[tag]=go` | IN in OR group |
-| `notinor[field]` | `?notinor[status]=spam` | NOT IN in OR group |
-| `isnullor` | `?isnullor=archived_at` | IS NULL in OR group |
-| `isnotnullor` | `?isnotnullor=paid_at` | IS NOT NULL in OR group |
+| Parameter         | Example                                 | Description                      |
+| ----------------- | --------------------------------------- | -------------------------------- |
+| `page`            | `?page=2`                               | Page number (offset pagination)  |
+| `limit`           | `?limit=25`                             | Items per page                   |
+| `items_per_page`  | `?items_per_page=25`                    | Alias for limit                  |
+| `sort`            | `?sort=-created_at,id`                  | Sort columns (`-` prefix = DESC) |
+| `sort_columns`    | `?sort_columns=name,age`                | Legacy sort columns              |
+| `sort_directions` | `?sort_directions=ASC,DESC`             | Legacy sort directions           |
+| `columns`         | `?columns=id,name`                      | SELECT specific columns          |
+| `search`          | `?search=john`                          | Full-text search term            |
+| `search_fields`   | `?search_fields=name,email`             | Fields to search in              |
+| `vacuum`          | `?vacuum=true`                          | Use count_estimate               |
+| `no_offset`       | `?no_offset=true`                       | Skip OFFSET clause               |
+| `cursor`          | `?cursor=<token>`                       | Cursor pagination token          |
+| `eq[field]`       | `?eq[status]=active`                    | Equality (OR within field)       |
+| `eqand[field]`    | `?eqand[role]=admin`                    | Equality AND                     |
+| `eqor[field]`     | `?eqor[status]=vip`                     | Equality in OR group             |
+| `like[field]`     | `?like[name]=john`                      | ILIKE match                      |
+| `likeand[field]`  | `?likeand[name]=john`                   | ILIKE AND                        |
+| `likeor[field]`   | `?likeor[name]=john`                    | ILIKE in OR group                |
+| `gte[field]`      | `?gte[age]=18`                          | >=                               |
+| `gt[field]`       | `?gt[price]=0`                          | >                                |
+| `lte[field]`      | `?lte[price]=999`                       | <=                               |
+| `lt[field]`       | `?lt[stock]=5`                          | <                                |
+| `in[field]`       | `?in[id]=1&in[id]=2`                    | IN                               |
+| `notin[field]`    | `?notin[status]=deleted`                | NOT IN                           |
+| `between[field]`  | `?between[price]=10&between[price]=500` | BETWEEN                          |
+| `isnull`          | `?isnull=deleted_at`                    | IS NULL                          |
+| `isnotnull`       | `?isnotnull=verified_at`                | IS NOT NULL                      |
+| `gteor[field]`    | `?gteor[age]=21`                        | >= in OR group                   |
+| `gtor[field]`     | `?gtor[score]=100`                      | > in OR group                    |
+| `lteor[field]`    | `?lteor[price]=50`                      | <= in OR group                   |
+| `ltor[field]`     | `?ltor[qty]=10`                         | < in OR group                    |
+| `inor[field]`     | `?inor[tag]=go`                         | IN in OR group                   |
+| `notinor[field]`  | `?notinor[status]=spam`                 | NOT IN in OR group               |
+| `isnullor`        | `?isnullor=archived_at`                 | IS NULL in OR group              |
+| `isnotnullor`     | `?isnotnullor=paid_at`                  | IS NOT NULL in OR group          |
 
 ---
 
@@ -942,7 +954,7 @@ import (
     "encoding/json"
     "net/http"
 
-    "github.com/booscaaa/go-paginate/v4/paginate"
+    "github.com/emberot/go-paginate/v4/paginate"
 )
 
 type Product struct {
@@ -1081,107 +1093,107 @@ LIMIT $N              -- cursor pagination (NoOffset=true)
 
 ### Builder methods
 
-| Method | Description |
-|---|---|
-| `NewBuilder()` | Create a new builder with global defaults |
-| `.Table(name)` | Set the FROM table |
-| `.Schema(name)` | Set the database schema |
-| `.Model(struct)` | Set the model for tag resolution |
-| `.Page(n)` | Set the page number (1-based) |
-| `.Limit(n)` | Set items per page (capped at `MaxLimit`) |
-| `.Select(cols...)` | SELECT specific columns |
-| `.OrderBy(col, dir?)` | Add ORDER BY clause |
-| `.OrderByDesc(col)` | Add ORDER BY col DESC |
-| `.Join(clause)` | Add raw JOIN clause |
-| `.LeftJoin(table, on)` | Add LEFT JOIN |
-| `.InnerJoin(table, on)` | Add INNER JOIN |
-| `.RightJoin(table, on)` | Add RIGHT JOIN |
-| `.Search(term, fields...)` | Full-text search across fields |
-| `.Eq(field, vals...)` | Equality (OR within field) |
-| `.EqAnd(field, vals...)` | Equality AND |
-| `.EqOr(field, vals...)` | Equality in OR group |
-| `.In(field, vals...)` | IN |
-| `.NotIn(field, vals...)` | NOT IN |
-| `.InOr(field, vals...)` | IN in OR group |
-| `.NotInOr(field, vals...)` | NOT IN in OR group |
-| `.WhereLike(field, vals...)` | ILIKE (OR within field) |
-| `.LikeAnd(field, vals...)` | ILIKE AND |
-| `.LikeOr(field, vals...)` | ILIKE in OR group |
-| `.WhereGreaterThan(field, val)` | > |
-| `.WhereGreaterThanOrEqual(field, val)` | >= |
-| `.WhereLessThan(field, val)` | < |
-| `.WhereLessThanOrEqual(field, val)` | <= |
-| `.GteOr(field, val)` | >= in OR group |
-| `.GtOr(field, val)` | > in OR group |
-| `.LteOr(field, val)` | <= in OR group |
-| `.LtOr(field, val)` | < in OR group |
-| `.WhereBetween(field, min, max)` | BETWEEN |
-| `.WhereIsNull(field)` | IS NULL |
-| `.WhereIsNotNull(field)` | IS NOT NULL |
-| `.WhereIsNullOr(field)` | IS NULL in OR group |
-| `.WhereIsNotNullOr(field)` | IS NOT NULL in OR group |
-| `.Where(clause, args...)` | Raw WHERE clause |
-| `.After(col, val)` | Single-column forward cursor |
-| `.Before(col, val)` | Single-column backward cursor |
-| `.WithoutOffset()` | Disable OFFSET |
-| `.WithVacuum()` | Use count_estimate |
-| `.FromJSON(json)` | Populate from JSON string |
-| `.FromMap(map)` | Populate from map |
-| `.FromStruct(struct)` | Populate from any struct (incl. PaginationParams) |
-| `.BuildSQL()` | Return `(query, args, error)` — paginated SELECT only |
-| `.BuildCountSQL()` | Return `(query, args, error)` — SELECT COUNT only |
-| `.Build()` | Return `(*SQLResult, error)` — both queries at once |
-| `.CurrentPage()` | Return current page number |
-| `.CurrentLimit()` | Return current items per page |
+| Method                                 | Description                                           |
+| -------------------------------------- | ----------------------------------------------------- |
+| `NewBuilder()`                         | Create a new builder with global defaults             |
+| `.Table(name)`                         | Set the FROM table                                    |
+| `.Schema(name)`                        | Set the database schema                               |
+| `.Model(struct)`                       | Set the model for tag resolution                      |
+| `.Page(n)`                             | Set the page number (1-based)                         |
+| `.Limit(n)`                            | Set items per page (capped at `MaxLimit`)             |
+| `.Select(cols...)`                     | SELECT specific columns                               |
+| `.OrderBy(col, dir?)`                  | Add ORDER BY clause                                   |
+| `.OrderByDesc(col)`                    | Add ORDER BY col DESC                                 |
+| `.Join(clause)`                        | Add raw JOIN clause                                   |
+| `.LeftJoin(table, on)`                 | Add LEFT JOIN                                         |
+| `.InnerJoin(table, on)`                | Add INNER JOIN                                        |
+| `.RightJoin(table, on)`                | Add RIGHT JOIN                                        |
+| `.Search(term, fields...)`             | Full-text search across fields                        |
+| `.Eq(field, vals...)`                  | Equality (OR within field)                            |
+| `.EqAnd(field, vals...)`               | Equality AND                                          |
+| `.EqOr(field, vals...)`                | Equality in OR group                                  |
+| `.In(field, vals...)`                  | IN                                                    |
+| `.NotIn(field, vals...)`               | NOT IN                                                |
+| `.InOr(field, vals...)`                | IN in OR group                                        |
+| `.NotInOr(field, vals...)`             | NOT IN in OR group                                    |
+| `.WhereLike(field, vals...)`           | ILIKE (OR within field)                               |
+| `.LikeAnd(field, vals...)`             | ILIKE AND                                             |
+| `.LikeOr(field, vals...)`              | ILIKE in OR group                                     |
+| `.WhereGreaterThan(field, val)`        | >                                                     |
+| `.WhereGreaterThanOrEqual(field, val)` | >=                                                    |
+| `.WhereLessThan(field, val)`           | <                                                     |
+| `.WhereLessThanOrEqual(field, val)`    | <=                                                    |
+| `.GteOr(field, val)`                   | >= in OR group                                        |
+| `.GtOr(field, val)`                    | > in OR group                                         |
+| `.LteOr(field, val)`                   | <= in OR group                                        |
+| `.LtOr(field, val)`                    | < in OR group                                         |
+| `.WhereBetween(field, min, max)`       | BETWEEN                                               |
+| `.WhereIsNull(field)`                  | IS NULL                                               |
+| `.WhereIsNotNull(field)`               | IS NOT NULL                                           |
+| `.WhereIsNullOr(field)`                | IS NULL in OR group                                   |
+| `.WhereIsNotNullOr(field)`             | IS NOT NULL in OR group                               |
+| `.Where(clause, args...)`              | Raw WHERE clause                                      |
+| `.After(col, val)`                     | Single-column forward cursor                          |
+| `.Before(col, val)`                    | Single-column backward cursor                         |
+| `.WithoutOffset()`                     | Disable OFFSET                                        |
+| `.WithVacuum()`                        | Use count_estimate                                    |
+| `.FromJSON(json)`                      | Populate from JSON string                             |
+| `.FromMap(map)`                        | Populate from map                                     |
+| `.FromStruct(struct)`                  | Populate from any struct (incl. PaginationParams)     |
+| `.BuildSQL()`                          | Return `(query, args, error)` — paginated SELECT only |
+| `.BuildCountSQL()`                     | Return `(query, args, error)` — SELECT COUNT only     |
+| `.Build()`                             | Return `(*SQLResult, error)` — both queries at once   |
+| `.CurrentPage()`                       | Return current page number                            |
+| `.CurrentLimit()`                      | Return current items per page                         |
 
 ### Response constructors
 
-| Function | Description |
-|---|---|
-| `NewPage[T](data, total, params, url)` | Offset pagination response with HATEOAS |
+| Function                                  | Description                             |
+| ----------------------------------------- | --------------------------------------- |
+| `NewPage[T](data, total, params, url)`    | Offset pagination response with HATEOAS |
 | `NewCursorPage[T](rawItems, params, url)` | Cursor pagination response with HATEOAS |
 
 ### Binding functions
 
-| Function | Description |
-|---|---|
-| `BindQueryParamsToStruct(url.Values)` | Bind URL values to `*PaginationParams` |
-| `BindQueryStringToStruct(string)` | Bind raw query string to `*PaginationParams` |
+| Function                              | Description                                     |
+| ------------------------------------- | ----------------------------------------------- |
+| `BindQueryParamsToStruct(url.Values)` | Bind URL values to `*PaginationParams`          |
+| `BindQueryStringToStruct(string)`     | Bind raw query string to `*PaginationParams`    |
 | `BindQueryParams(url.Values, target)` | Bind URL values to any struct with `query` tags |
-| `NewPaginationParams()` | Create `PaginationParams` with global defaults |
+| `NewPaginationParams()`               | Create `PaginationParams` with global defaults  |
 
 ### Cursor functions
 
-| Function | Description |
-|---|---|
+| Function                      | Description                       |
+| ----------------------------- | --------------------------------- |
 | `EncodeCursor(col, val, dir)` | Encode single-column cursor token |
-| `DecodeCursor(token)` | Decode single-column cursor token |
+| `DecodeCursor(token)`         | Decode single-column cursor token |
 
 ### Configuration functions
 
-| Function | Description |
-|---|---|
-| `SetDefaultLimit(n)` | Set default items per page |
-| `SetMaxLimit(n)` | Set maximum allowed limit |
-| `SetDebugMode(bool)` | Enable/disable SQL logging |
-| `SetLogger(*slog.Logger)` | Set custom slog logger |
-| `GetDefaultLimit()` | Get current default limit |
-| `GetMaxLimit()` | Get current max limit |
-| `IsDebugMode()` | Get debug mode status |
+| Function                  | Description                |
+| ------------------------- | -------------------------- |
+| `SetDefaultLimit(n)`      | Set default items per page |
+| `SetMaxLimit(n)`          | Set maximum allowed limit  |
+| `SetDebugMode(bool)`      | Enable/disable SQL logging |
+| `SetLogger(*slog.Logger)` | Set custom slog logger     |
+| `GetDefaultLimit()`       | Get current default limit  |
+| `GetMaxLimit()`           | Get current max limit      |
+| `IsDebugMode()`           | Get debug mode status      |
 
 ---
 
 ## Migration from v3
 
 ```bash
-go get github.com/booscaaa/go-paginate/v4
+go get github.com/emberot/go-paginate/v4
 ```
 
-| v3 | v4 |
-|---|---|
-| `paginate.Paginate(...)` | `paginate.NewBuilder().Table(...).Model(...).Build()` |
-| Manual response struct | `paginate.NewPage[T](data, total, params, url)` |
-| No cursor pagination | `paginate.NewCursorPage[T](rawItems, params, url)` |
-| `import ".../v3/paginate"` | `import ".../v4/paginate"` |
+| v3                         | v4                                                    |
+| -------------------------- | ----------------------------------------------------- |
+| `paginate.Paginate(...)`   | `paginate.NewBuilder().Table(...).Model(...).Build()` |
+| Manual response struct     | `paginate.NewPage[T](data, total, params, url)`       |
+| No cursor pagination       | `paginate.NewCursorPage[T](rawItems, params, url)`    |
+| `import ".../v3/paginate"` | `import ".../v4/paginate"`                            |
 
 All filter methods and query string keys are identical between v3 and v4.

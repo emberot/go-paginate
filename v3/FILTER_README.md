@@ -34,6 +34,7 @@ These operators complement the existing advanced operators (`LikeOr`, `LikeAnd`,
 ### 🆕 New Simple Operators
 
 #### `Like` - Pattern Matching
+
 ```go
 // Builder API
 builder.WhereLike("name", "john%")
@@ -49,6 +50,7 @@ paginate.WithLike(map[string][]string{
 ```
 
 #### `Eq` - Simple Equality
+
 ```go
 // Builder API
 builder.WhereEquals("status", "active")
@@ -64,6 +66,7 @@ paginate.WithEq(map[string][]any{
 ```
 
 #### `In` - Multiple Value Matching
+
 ```go
 // Builder API
 builder.WhereIn("age", 25, 30, 35, 40)
@@ -79,6 +82,7 @@ paginate.WithIn(map[string][]any{
 ```
 
 #### `NotIn` - Exclusion Matching
+
 ```go
 // Builder API
 builder.WhereNotIn("status", "deleted", "banned", "suspended")
@@ -94,6 +98,7 @@ paginate.WithNotIn(map[string][]any{
 ```
 
 #### `Between` - Range Queries
+
 ```go
 // Builder API
 builder.WhereBetween("age", 18, 65)
@@ -112,6 +117,7 @@ paginate.WithBetween(map[string][2]any{
 ```
 
 #### `IsNull` - Null Value Checks
+
 ```go
 // Builder API
 builder.WhereIsNull("deleted_at")
@@ -125,6 +131,7 @@ paginate.WithIsNull([]string{"deleted_at", "archived_at"})
 ```
 
 #### `IsNotNull` - Non-Null Value Checks
+
 ```go
 // Builder API
 builder.WhereIsNotNull("email")
@@ -184,17 +191,17 @@ func advancedUserSearch() {
 
     fmt.Printf("SQL: %s\n", sql)
     fmt.Printf("Args: %v\n", args)
-    
+
     // Output SQL:
-    // SELECT * FROM users WHERE 
-    //   (name::TEXT ILIKE $1) AND 
-    //   (email::TEXT ILIKE $2) AND 
-    //   age IN ($3, $4, $5, $6) AND 
-    //   status NOT IN ($7, $8, $9) AND 
-    //   salary BETWEEN $10 AND $11 AND 
-    //   deleted_at IS NULL AND 
-    //   email IS NOT NULL AND 
-    //   role_id IS NOT NULL 
+    // SELECT * FROM users WHERE
+    //   (name::TEXT ILIKE $1) AND
+    //   (email::TEXT ILIKE $2) AND
+    //   age IN ($3, $4, $5, $6) AND
+    //   status NOT IN ($7, $8, $9) AND
+    //   salary BETWEEN $10 AND $11 AND
+    //   deleted_at IS NULL AND
+    //   email IS NOT NULL AND
+    //   role_id IS NOT NULL
     // ORDER BY name ASC LIMIT 25 OFFSET 0
 }
 ```
@@ -220,38 +227,38 @@ func productSearch() {
     params, err := paginate.NewPaginator(
         paginate.WithStruct(Product{}),
         paginate.WithTable("products"),
-        
+
         // Search for electronics or gadgets
         paginate.WithLike(map[string][]string{
             "name": {"%electronics%", "%gadget%"},
             "tags": {"%smartphone%", "%laptop%"},
         }),
-        
+
         // Specific categories
         paginate.WithIn(map[string][]any{
             "category_id": {1, 2, 3, 5}, // Electronics categories
         }),
-        
+
         // Exclude certain brands
         paginate.WithNotIn(map[string][]any{
             "brand": {"BrandX", "BrandY", "Discontinued"},
         }),
-        
+
         // Price range
         paginate.WithBetween(map[string][2]any{
             "price": {100.0, 2000.0},
             "rating": {3.5, 5.0},
         }),
-        
+
         // Must be in stock and have description
         paginate.WithEq(map[string][]any{
             "in_stock": {true},
         }),
         paginate.WithIsNotNull([]string{"description"}),
-        
+
         // Optional: products with discounts
         // paginate.WithIsNotNull([]string{"discount_id"}),
-        
+
         paginate.WithPage(1),
         paginate.WithLimit(20),
         paginate.WithSort([]string{"-rating", "price", "name"}),
@@ -273,7 +280,7 @@ func productSearch() {
 func handleUserSearch(w http.ResponseWriter, r *http.Request) {
     // Example URL:
     // /users?like[name]=john%&in[age]=25&in[age]=30&in[age]=35&notin[status]=deleted&notin[status]=banned&between[salary][0]=50000&between[salary][1]=150000&isnull=deleted_at&isnotnull=email&page=1&limit=25
-    
+
     // Automatically bind query parameters
     params, err := paginate.BindQueryParamsToStruct(r.URL.Query())
     if err != nil {
@@ -353,13 +360,14 @@ builder = builder.
 ## 📊 Performance Notes
 
 ### Optimized SQL Generation
+
 All new operators generate optimized, parameterized SQL:
 
 ```sql
 -- Like operator
 WHERE name::TEXT ILIKE $1
 
--- In operator  
+-- In operator
 WHERE age IN ($1, $2, $3, $4)
 
 -- NotIn operator
@@ -376,21 +384,23 @@ WHERE email IS NOT NULL
 ### Best Practices
 
 1. **Use `In` instead of multiple `Eq` conditions**
+
    ```go
    // ❌ Less efficient
    builder.WhereEquals("status", "active").
            WhereEquals("status", "pending")
-   
+
    // ✅ More efficient
    builder.WhereIn("status", "active", "pending")
    ```
 
 2. **Use `Between` for ranges**
+
    ```go
    // ❌ Less efficient
    builder.WhereGreaterThanOrEqual("age", 18).
            WhereLessThanOrEqual("age", 65)
-   
+
    // ✅ More efficient
    builder.WhereBetween("age", 18, 65)
    ```
@@ -432,16 +442,19 @@ sql, args, err := paginate.NewBuilder().
 ## 📝 Complete HTTP Query Examples
 
 ### Simple Filtering
+
 ```
 /users?like[name]=john%&eq[status]=active&isnotnull=email
 ```
 
 ### Complex Filtering
+
 ```
 /products?like[name]=%phone%&in[category_id]=1&in[category_id]=2&in[category_id]=3&notin[brand]=BrandX&notin[brand]=BrandY&between[price][0]=100&between[price][1]=1000&eq[in_stock]=true&isnotnull=description&isnull=discontinued_at&sort=-rating&sort=price&page=1&limit=20
 ```
 
 ### User Management
+
 ```
 /users?like[email]=%@company.com&in[department_id]=1&in[department_id]=2&notin[status]=deleted&notin[status]=suspended&between[age][0]=25&between[age][1]=55&between[salary][0]=50000&between[salary][1]=150000&isnull=deleted_at&isnotnull=role_id&sort=name&sort=-created_at
 ```
@@ -462,7 +475,7 @@ Go Paginate v3 adds **7 powerful new operators** that make your database queries
 Upgrade to v3 today and supercharge your pagination capabilities!
 
 ```bash
-go get github.com/booscaaa/go-paginate/v3
+go get github.com/emberot/go-paginate/v3
 ```
 
 ---

@@ -22,7 +22,7 @@ package main
 import (
     "fmt"
     "log"
-    "github.com/booscaaa/go-paginate/v3/paginate"
+    "github.com/emberot/go-paginate/v3/paginate"
 )
 
 func main() {
@@ -45,7 +45,7 @@ func main() {
 ```go
 import (
     "net/url"
-    "github.com/booscaaa/go-paginate/v3/paginate"
+    "github.com/emberot/go-paginate/v3/paginate"
 )
 
 func handler() {
@@ -69,31 +69,31 @@ func handler() {
 
 ### Basic Parameters
 
-| Parameter         | Type     | Description                 | Example                        |
-| ----------------- | -------- | --------------------------- | ------------------------------ |
-| `page`            | int      | Page number                 | `page=2`                       |
-| `limit`           | int      | Items per page              | `limit=25`                     |
-| `items_per_page`  | int      | Alias for limit             | `items_per_page=25`            |
-| `search`          | string   | Search term                 | `search=john`                  |
-| `search_fields`   | []string | Fields for search           | `search_fields=name,email`     |
-| `sort_columns`    | []string | Columns for sorting         | `sort_columns=name,created_at` |
-| `sort_directions` | []string | Sort directions             | `sort_directions=ASC,DESC`     |
-| `columns`         | []string | Columns for selection       | `columns=id,name,email`        |
-| `vacuum`          | bool     | Use count estimation        | `vacuum=true`                  |
-| `no_offset`       | bool     | Disable OFFSET              | `no_offset=false`              |
+| Parameter         | Type     | Description           | Example                        |
+| ----------------- | -------- | --------------------- | ------------------------------ |
+| `page`            | int      | Page number           | `page=2`                       |
+| `limit`           | int      | Items per page        | `limit=25`                     |
+| `items_per_page`  | int      | Alias for limit       | `items_per_page=25`            |
+| `search`          | string   | Search term           | `search=john`                  |
+| `search_fields`   | []string | Fields for search     | `search_fields=name,email`     |
+| `sort_columns`    | []string | Columns for sorting   | `sort_columns=name,created_at` |
+| `sort_directions` | []string | Sort directions       | `sort_directions=ASC,DESC`     |
+| `columns`         | []string | Columns for selection | `columns=id,name,email`        |
+| `vacuum`          | bool     | Use count estimation  | `vacuum=true`                  |
+| `no_offset`       | bool     | Disable OFFSET        | `no_offset=false`              |
 
 ### Complex Parameters (Array Syntax)
 
-| Parameter           | Type                | Description         | Example                                              |
-| ------------------- | ------------------- | ------------------- | ---------------------------------------------------- |
-| `likeor[field]`     | map[string][]string | OR search by field  | `likeor[status]=active&likeor[status]=pending`       |
-| `likeand[field]`    | map[string][]string | AND search by field | `likeand[name]=john`                                 |
-| `eqor[field]`       | map[string][]any    | OR equality         | `eqor[age]=25&eqor[age]=30`                          |
-| `eqand[field]`      | map[string][]any    | AND equality        | `eqand[role]=admin`                                  |
-| `gte[field]`        | map[string]any      | Greater or equal    | `gte[age]=18`                                        |
-| `gt[field]`         | map[string]any      | Greater than        | `gt[score]=80`                                       |
-| `lte[field]`        | map[string]any      | Less or equal       | `lte[price]=100.50`                                  |
-| `lt[field]`         | map[string]any      | Less than           | `lt[date]=2023-12-31`                                |
+| Parameter        | Type                | Description         | Example                                        |
+| ---------------- | ------------------- | ------------------- | ---------------------------------------------- |
+| `likeor[field]`  | map[string][]string | OR search by field  | `likeor[status]=active&likeor[status]=pending` |
+| `likeand[field]` | map[string][]string | AND search by field | `likeand[name]=john`                           |
+| `eqor[field]`    | map[string][]any    | OR equality         | `eqor[age]=25&eqor[age]=30`                    |
+| `eqand[field]`   | map[string][]any    | AND equality        | `eqand[role]=admin`                            |
+| `gte[field]`     | map[string]any      | Greater or equal    | `gte[age]=18`                                  |
+| `gt[field]`      | map[string]any      | Greater than        | `gt[score]=80`                                 |
+| `lte[field]`     | map[string]any      | Less or equal       | `lte[price]=100.50`                            |
+| `lt[field]`      | map[string]any      | Less than           | `lt[date]=2023-12-31`                          |
 
 ## Advanced Examples
 

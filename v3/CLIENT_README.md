@@ -5,7 +5,7 @@ O **Go Paginate Client** é uma biblioteca cliente que permite a outras aplicaç
 ## 🚀 Instalação
 
 ```bash
-go get github.com/booscaaa/go-paginate/v3
+go get github.com/emberot/go-paginate/v3
 ```
 
 ## 📖 Uso Básico
@@ -15,13 +15,13 @@ package main
 
 import (
     "fmt"
-    "github.com/booscaaa/go-paginate/v3/client"
+    "github.com/emberot/go-paginate/v3/client"
 )
 
 func main() {
     // Criar um novo cliente
     c := client.New("https://api.example.com/users")
-    
+
     // Construir URL com paginação básica
     url := c.Page(2).Limit(25).BuildURL()
     fmt.Println(url) // https://api.example.com/users?limit=25&page=2
@@ -202,7 +202,7 @@ url2 := fmt.Sprintf("https://api2.com/articles?%s", queryString)
 ```go
 import (
     "net/http"
-    "github.com/booscaaa/go-paginate/v3/client"
+    "github.com/emberot/go-paginate/v3/client"
 )
 
 func fetchUsers() {
@@ -213,14 +213,14 @@ func fetchUsers() {
         Limit(10).
         Eq("status", "active").
         BuildURL()
-    
+
     // Fazer requisição HTTP
     resp, err := http.Get(url)
     if err != nil {
         log.Fatal(err)
     }
     defer resp.Body.Close()
-    
+
     // Processar resposta...
 }
 ```
@@ -254,13 +254,13 @@ import (
     "fmt"
     "log"
     "net/http"
-    "github.com/booscaaa/go-paginate/v3/client"
+    "github.com/emberot/go-paginate/v3/client"
 )
 
 func main() {
     // Criar cliente com filtros complexos
     c := client.New("https://api.example.com/users")
-    
+
     url := c.
         Page(2).
         Limit(25).
@@ -275,16 +275,16 @@ func main() {
         IsNotNull("email").
         Vacuum(true).
         BuildURL()
-    
+
     fmt.Println("Generated URL:", url)
-    
+
     // Fazer requisição HTTP
     resp, err := http.Get(url)
     if err != nil {
         log.Fatal(err)
     }
     defer resp.Body.Close()
-    
+
     fmt.Println("Response Status:", resp.Status)
 }
 ```
@@ -301,6 +301,7 @@ go test -v
 ## 📚 Compatibilidade
 
 O cliente gera query strings totalmente compatíveis com:
+
 - go-paginate v3 `BindQueryParams`
 - go-paginate v3 `BindQueryStringToStruct`
 - Todos os filtros e operadores suportados pela biblioteca principal
